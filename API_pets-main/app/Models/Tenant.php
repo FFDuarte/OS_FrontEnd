@@ -12,6 +12,21 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     use HasDatabase, HasDomains;
 
     protected $fillable = [
+        'id',
+        'empresa',
+        'cnpf_cnpj',
+        'fantasia',
+        'logradouro',
+        'numero',
+        'bairro',
+        'cidade',
+        'uf',
+        'cep',
+        'complemento',
+        'observacoes',
+        'telefone1',
+        'telefone2',
+        'telefone3'
     ];
 
     /**

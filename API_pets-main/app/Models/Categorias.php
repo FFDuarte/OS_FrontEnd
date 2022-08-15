@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-class Produtos extends Model
+class Categorias extends Model
 {
 
     use SoftDeletes;
@@ -16,25 +16,18 @@ class Produtos extends Model
     /**
      * Database table
      */
-    protected $table = 'produtos';
+    protected $table = 'categorias';
 
 
     protected $fillable = [
         'id',
-        'codigo',
-        'descricao',
-        'und_saida',
-        'qtd',
-        'preco_custo',
-        'preco_venda',
-        'categoria',
+        'nome',
         'tenant_id',
+        'foto_small',
+        'foto_red',
+        'foto_orig'
     ];
 
-    protected $casts = [
-        'preco_custo' => 'float',
-        'preco_venda' => 'float',
-    ];
 
     protected $dates = [];
 
@@ -48,12 +41,4 @@ class Produtos extends Model
      */
     public $timestamps = true;
 
-    // Relationships
-    public function fotos()
-    {
-        /**
-         * Relacionamento de tenant com usuário principal
-         */
-        return $this->hasOne('App\Models\ProdutosFotos', 'id', 'id');
-    }
 }

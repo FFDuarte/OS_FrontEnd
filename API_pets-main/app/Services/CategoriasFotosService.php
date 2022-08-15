@@ -2,25 +2,23 @@
 
 namespace App\Services;
 
-use App\Models\ProdutosFotos;
-use App\Models\Produtos;
+use App\Models\Categorias;
 use Gumlet\ImageResize;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProdutosFotosService
+class CategoriasFotosService
 {
     /**
      * Mensagem padrão de não encontrado.
      */
-    const ERROR_MESSAGE_NOT_FOUND = 'Produto não encontrado';
+    const ERROR_MESSAGE_NOT_FOUND = 'Categoria não encontrada';
 
     private $model;
 
-    public function __construct(ProdutosFotos $produtosFotos, Produtos $produto)
+    public function __construct(Categorias $categoriasFotos)
     {
-        $this->model = $produtosFotos;
-        $this->model_produtos = $produto;
+        $this->model = $categoriasFotos;
     }
 
     /**
@@ -54,9 +52,9 @@ class ProdutosFotosService
     }
 
     /**
-     * Atualiza foto, envia para o Google e atualiza no banco a url.
+     * Atualiza foto da categoria
      */
-    public function AdicionarFoto($id_produto, Request $request)
+    public function AtualizarFoto($id_categoria, Request $request)
     {
         try {
 
@@ -64,16 +62,18 @@ class ProdutosFotosService
             $foto64_red   = $this->RedimensionarPadrao($request->foto);
             $foto64_orig  = str_replace('data:image/png;base64,', '', $request->foto);
 
-            $produto = $this->model_produtos->find($id_produto);
+            $categoria = $this->model->find($id_categoria);
 
-            if ($produto) {
-                $this->model->create([
-                    "id_produto" => $id_produto,
+            if ($categoria) {
+                $categoria->update([
                     "foto_small" => $foto64_small,
                     "foto_red"   => $foto64_red,
                     "foto_orig"  => $foto64_orig,
                 ]);
             }
+
+            return response()->json($categoria, Response::HTTP_OK);
+
         } catch (\Exception $e) {
             return response()->json([$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

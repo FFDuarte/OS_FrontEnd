@@ -19,6 +19,11 @@ class ProdutosController extends Controller
         return $this->produtosService->ListarTodos($request);
     }
 
+    public function ObterProduto($id_produto, Request $request)
+    {
+        return $this->produtosService->ObterProduto($id_produto, $request);
+    }
+
     public function AdicionarProduto(Request $request){
         return $this->produtosService->AdicionarProduto($request);
     }

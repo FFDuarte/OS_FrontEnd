@@ -13,14 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('produtos_fotos', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_produto');
-            $table->boolean('principal')->default(false);
-            $table->text('foto_small')->nullable();
-            $table->text('foto_red')->nullable();
+        Schema::create('categorias', function (Blueprint $table) {
+            $table->increments('id')->unique();
+
+            $table->text('tenant_id');
+
+            $table->text('nome')->nullable();
+
             $table->text('foto_orig')->nullable();
-            $table->string('tenant_id');
+            $table->text('foto_red')->nullable();
+            $table->text('foto_small')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('produtos_fotos');
+        Schema::dropIfExists('categorias');
     }
 };

@@ -65,6 +65,25 @@ class ProdutosService
         }
     }
 
+    public function ObterProduto($id_produto, Request $request)
+    {
+        try {
+
+                $produto = $this->model->find($id_produto);
+
+                if ($produto) {
+
+                    return response()->json($produto, Response::HTTP_OK);
+                } else {
+                    return response()->json(['Produto não encontrado'], Response::HTTP_NOT_FOUND);
+                }
+
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     public function AdicionarProduto(Request $request)
     {
         try {

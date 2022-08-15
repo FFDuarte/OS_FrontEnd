@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\UserAdmin;
 use App\Services\AuthenticateAdminService;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 
@@ -41,12 +40,6 @@ class AuthAdminController extends Controller
         } catch (\Throwable $th) {
             return $th;
         }
-    }
-
-    protected function Refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-
     }
 
     public function Registrar(Request $request )
