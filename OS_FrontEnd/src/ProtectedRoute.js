@@ -3,7 +3,6 @@ import { getTenant_id } from "./utils/services/auth";
 import DashboardApp from './pages/Dashboard';
 import DashboardLayout from './layouts/dashboard';
 import Profile from './pages/Profile';
-import NewwAssociados from './sections/associados'
 import AtualizarAssociado from './sections/associados/AtuliazarAssociados'
 
 
@@ -12,6 +11,11 @@ import Carros from './pages/tenant/carros';
 import Clientes from './pages/tenant/clientes';
 import OrdemServico from './pages/tenant/ordemservico';
 
+
+import NewClient from './pages/tenant/clientes/newClient'
+import NewCar from './pages/tenant/carros/newCarros'
+import NewPeca from './pages/tenant/pecas/newPecas'
+import NewOs from './pages/tenant/ordemservico/newOrdemServico'
 
 
 export const ProtectedRoute = ({ children }) => {
@@ -42,7 +46,12 @@ export  function RouteAutenticate() {
 
 
         { path: 'profile', element: <Profile /> },
-        { path: 'novoassociado', element: <NewwAssociados /> },
+
+        { path: 'novocliente', element: <NewClient /> },
+        { path: 'novocarro', element: <NewCar /> },
+        { path: 'novapeca', element: <NewPeca /> },
+        { path: 'novaos', element: <NewOs /> },
+
         { path: 'atualizarassociado/:id', element: <AtualizarAssociado /> },
 
       ],

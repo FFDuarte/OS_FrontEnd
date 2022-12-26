@@ -17,7 +17,7 @@ const TenantConfig = [
   },
   {
     title: 'Adicionar Cliente',
-    path: '#',
+    path: '/dashboard/novocliente',
     icon: getIcon('akar-icons:person-add'),
   },
 
@@ -28,7 +28,7 @@ const TenantConfig = [
   },
   {
     title: 'Adicionar Carros',
-    path: '#',
+    path: '/dashboard/novocarro',
     icon: getIcon('akar-icons:person-add'),
   },
   {
@@ -38,12 +38,17 @@ const TenantConfig = [
   },
   {
     title: 'Adicionar Peças',
-    path: '#',
+    path: '/dashboard/novapeca',
     icon: getIcon('mdi:list-status'),
   },
   {
     title: 'Ordem de Serviço',
     path: '/dashboard/ordemservico',
+    icon: getIcon('mdi:list-status'),
+  },
+  {
+    title: 'Adicionar Ordem de Serviço',
+    path: '/dashboard/novaos',
     icon: getIcon('mdi:list-status'),
   },
 ];

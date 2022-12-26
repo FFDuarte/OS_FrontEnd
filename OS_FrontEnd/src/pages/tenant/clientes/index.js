@@ -199,7 +199,7 @@ export default function Clientes() {
   };
 
   async function formGetAssociado(id) {
-    await api.get(`dashboard/${tenantId}/associados/buscar/${id}`,{
+    await api.get(`dashboard/${tenantId}/clientes/buscar/${id}`,{
        headers: {
          'Authorization': `Bearer ${access_token}`
        },
@@ -257,7 +257,7 @@ export default function Clientes() {
 
     
       if(id != null & id != '' ){
-        await api.post(`dashboard/${tenantId}/associados/deletar/${id}`,{
+        await api.post(`dashboard/${tenantId}/clientes/deletar/${id}`,{
         },{
           headers: {
             'Authorization': `Bearer ${access_token}`
@@ -295,7 +295,7 @@ export default function Clientes() {
             </Typography>
           </Button>
      
-          <Link href="/dashboard/novoassociado" variant="body2">
+          <Link href="/dashboard/novocliente" variant="body2">
           <Button    variant="contained"  startIcon={<Iconify icon="eva:plus-fill" />} >
             Novo Cliente
           </Button>

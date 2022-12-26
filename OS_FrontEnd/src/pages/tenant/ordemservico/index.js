@@ -296,7 +296,7 @@ export default function OrdemServico() {
             </Typography>
           </Button>
      
-          <Link href="/dashboard/novoassociado" variant="body2">
+          <Link href="/dashboard/novaos" variant="body2">
           <Button    variant="contained"  startIcon={<Iconify icon="eva:plus-fill" />} >
             Gerar Ordem de Servico
           </Button>
