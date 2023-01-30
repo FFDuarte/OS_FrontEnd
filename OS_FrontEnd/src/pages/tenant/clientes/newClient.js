@@ -54,10 +54,10 @@ export default function NewClient() {
 
 
   async function formAssociados() {
-    await api.post(`/dashboard/${tenant_id}/associados/add`,{
+    await api.post(`/dashboard/${tenant_id}/clientes/add`,{
  
 
-          nome,
+      nome,
           cpf,
           data_nascimento,
           rua,

@@ -62,8 +62,9 @@ const TABLE_HEAD = [
   { id: 'preco', label: 'Preço', alignRight: false },
   { id: 'material', label: 'Material', alignRight: false },
   { id: 'descricao', label: 'Descrição', alignRight: false },
+  { id: 'ano_fabricacao', label: 'Ano de fabrição', alignRight: false },
   { id: 'opcoes', label: 'Opções', alignRight: false },
-
+  
 ];
 
 // ----------------------------------------------------------------------
@@ -117,7 +118,7 @@ export default function Pecas() {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await api.get(`dashboard/${tenantId}/associados`, {
+      const data = await api.get(`dashboard/${tenantId}/pecas`, {
         headers: {
           'Authorization': `Bearer ${access_token}`
         }
@@ -320,8 +321,8 @@ export default function Pecas() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id , nome ,telefone1,cnpf_cnpj,data_nascimento,email,rua,numero,
-                      pais,uf,cep } = row;
+                    const { id , nome ,marca,descricao,aplicacao,categoria,preco,material,
+                      ano_fabricacao} = row;
                     const isItemSelected = selected.indexOf(nome) !== -1;
 
                     return (  
@@ -336,12 +337,14 @@ export default function Pecas() {
                       >
                       
                           <TableCell align="left">{nome}</TableCell>
-                          <TableCell align="left">{data_nascimento}</TableCell>
-                          <TableCell align="left">{cnpf_cnpj}</TableCell>
-                          <TableCell align="left">{telefone1}</TableCell>
-                          <TableCell align="left">{data_nascimento}</TableCell>
-                          <TableCell align="left">{cnpf_cnpj}</TableCell>
-                          <TableCell align="left">{telefone1}</TableCell>
+                          <TableCell align="left">{marca}</TableCell>
+                          <TableCell align="left">{aplicacao}</TableCell>
+                          <TableCell align="left">{categoria}</TableCell>
+                  
+                          <TableCell align="left">{preco}</TableCell>
+                          <TableCell align="left">{material}</TableCell>
+                          <TableCell align="left">{descricao}</TableCell>
+                          <TableCell align="left">{ano_fabricacao}</TableCell>
                           <TableCell align="left">
 
                             <MenuItem sx={{ color: 'text.secondary' }} onClick={() => DeletOpen(id)}>

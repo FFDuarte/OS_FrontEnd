@@ -33,7 +33,7 @@ import api from '../../../utils/api'
 // ----------------------------------------------------------------------
 
 
-export default function NewCarros() {
+export default function EditCarros() {
 
 
   const navigate = useNavigate();
@@ -51,65 +51,65 @@ export default function NewCarros() {
   var access_token = JSON.parse(getAcessToken())
 
 
-  async function formAssociados() {
-    const cliente =  JSON.stringify(clienteDados.id)
 
-    await api.post(`/dashboard/${tenant_id}/carros/add`,{
-      ano,
-      placa,
-          modelo,
-          fabricante,
-          cliente,
-          tenant_id
 
-      
-      },{
-        headers: {
-          'Authorization': `Bearer ${access_token}`
-        },
-  
-      } ).then((response) =>{
-        
-        if(response.status == 200){
-          alert("Campo(s) Obrigatirio(s) esta(ão) vazio(s)!")
-        }
-        if(response.status == 201){
-          alert("Cadastrado com Sucesso")
-        }
-    })
- }
+ const idcarros = useParams();
 
    const handleSubmit = async e => {
     e.preventDefault();
-    formAssociados();
-
+    formAtualizar(idcarros)
 
   }
  
+ 
+
+ async function formAtualizar(id) {
+  const cliente =  JSON.stringify(clienteDados)
+  console.log(id.id)
+  await api.post(`dashboard/${tenant_id}/carros/atualizar/${id.id}`,{
+    ano,
+    placa,
+    modelo,
+    fabricante,
+    cliente,
+    tenant_id
+
+  },{
+     headers: {
+       'Authorization': `Bearer ${access_token}`
+     },
+
+   } ).then((response) =>{  
+  
+ })
 
 
-
+}
 
 
 
   useEffect(() => {
-    const getData = async () => {
-      const data = await api.get(`dashboard/${tenant_id}/clientes`, {
-        headers: {
-          'Authorization': `Bearer ${access_token}`
-        }
-        })
-     
-        setListCliente(data.data.map(cliente => ({id: cliente.id ,label: cliente.nome})))
-    };
+    const formGetAssociado = async (id) => {
+     await api.get(`dashboard/${tenant_id}/carros/buscar/${id}`,{
+      headers: {
+        'Authorization': `Bearer ${access_token}`
+      }
+    } ).then((response)=>{
+      setAno(response.data.ano)
+      setPlaca(response.data.placa)
+      setModelo(response.data.modelo)
+      setFabricante(response.data.fabricante)
+      setCliente(JSON.parse(response.data.cliente))
+   
+    })};
+    formGetAssociado(idcarros.id)
     
-    getData();
   }, []);
 
 
  
 
-
+setListCliente()
   
 
 

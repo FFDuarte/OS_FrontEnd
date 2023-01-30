@@ -38,8 +38,7 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 import {users} from '../../../_mock/clientes';
 import api from '../../../utils/api';
 import {getAcessToken , getTenant_id} from '../../../utils/services/auth'
-import NewwAssociados from '../../../sections/associados'
-import AtuliazarAssociados from '../../../sections/associados/AtuliazarAssociados'
+import Atuliazarclientes from './editClientes'
 
 import { Edit } from '@mui/icons-material';
 import { width } from '@mui/system';
@@ -183,9 +182,9 @@ export default function Clientes() {
 
   const [open, setOpen] = useState(false);
 
-  const [editAssociado, setEditAssociado] = useState(false);
+  const [editcliente, setEditcliente] = useState(false);
 
-  const [associado , setAssociado] = useState();
+  const [cliente , setcliente] = useState();
 
 
 
@@ -198,7 +197,7 @@ export default function Clientes() {
     setOpen(false);
   };
 
-  async function formGetAssociado(id) {
+  async function formGetcliente(id) {
     await api.get(`dashboard/${tenantId}/clientes/buscar/${id}`,{
        headers: {
          'Authorization': `Bearer ${access_token}`
@@ -207,7 +206,7 @@ export default function Clientes() {
      } ).then((response) =>{
 
    
-      setAssociado(response.data)
+      setcliente(response.data)
    })
 
 
@@ -219,28 +218,28 @@ export default function Clientes() {
     const EditOpen = (id) =>{
 
       try {
-        formGetAssociado(id);
+        formGetcliente(id);
       } catch (error) {
         
       }
       
-      setEditAssociado(true);
+      setEditcliente(true);
 
     }
 
     const EditClose = (event) =>{
         event.preventDefault();
-        setEditAssociado(false);
+        setEditcliente(false);
     }
 
 
     
-    const [idAssociados, setIdAssociado] = useState(null);
+    const [idclientes, setIdcliente] = useState(null);
 
     const [getDelte, setDelete] = useState(false);
     
     const DeletOpen = (id) =>{
-        setIdAssociado(id)
+        setIdcliente(id)
         
         setDelete(true);
     }
@@ -252,22 +251,15 @@ export default function Clientes() {
     }
 
 
-    const deleteAssociado = async (id) =>  {
-    
-
-    
-      if(id != null & id != '' ){
-        await api.post(`dashboard/${tenantId}/clientes/deletar/${id}`,{
-        },{
-          headers: {
-            'Authorization': `Bearer ${access_token}`
-          },
-    
-        } ).then((response) =>{
-    
-      })
-      window.location.reload();
-      }
+    const deletecliente = async (id) =>  {
+      await api.delete(`dashboard/${tenantId}/clientes/deletar/${id}`,{
+        headers: {
+          'Authorization': `Bearer ${access_token}`
+        },
+  
+      } ).then((response) =>{
+    })
+    window.location.reload();
     }
     const particlesInit = async (main) => {
 
@@ -321,7 +313,7 @@ export default function Clientes() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id , nome ,telefone1,cnpf_cnpj,data_nascimento,email,rua,numero,
+                    const { id , nome ,telefone,cpf,data_nascimento,email,rua,numero,
                       pais,uf,cep } = row;
                     const isItemSelected = selected.indexOf(nome) !== -1;
 
@@ -338,8 +330,8 @@ export default function Clientes() {
                       
                           <TableCell align="left">{nome}</TableCell>
                           <TableCell align="left">{data_nascimento}</TableCell>
-                          <TableCell align="left">{cnpf_cnpj}</TableCell>
-                          <TableCell align="left">{telefone1}</TableCell>
+                          <TableCell align="left">{cpf}</TableCell>
+                          <TableCell align="left">{telefone}</TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{rua} - {numero}</TableCell>
                           <TableCell align="left">{cep} </TableCell>
@@ -353,23 +345,14 @@ export default function Clientes() {
                               <ListItemText primary="Deletar" primaryTypographyProps={{ variant: 'body2' }} />
                             </MenuItem>
                             
-                            <RouterLink   to={"/dashboard/atualizarassociado/" + id}>
-                            <MenuItem  to={"/dashboard/atualizarassociado" + id} sx={{ color: 'text.secondary' }}>
-                              <ListItemIcon>
-                                <Iconify icon="eva:edit-fill" width={24} height={24} />
-                              </ListItemIcon>
-                              <ListItemText primary="Editar" primaryTypographyProps={{ variant: 'body2' }} />
-                            </MenuItem>
-
+                            <RouterLink   to={"/dashboard/editcliente/" + id}>
+                              <MenuItem  to={"/dashboard/editcliente" + id} sx={{ color: 'text.secondary' }}>
+                                <ListItemIcon>
+                                  <Iconify icon="eva:edit-fill" width={24} height={24} />
+                                </ListItemIcon>
+                                <ListItemText primary="Editar" primaryTypographyProps={{ variant: 'body2' }} />
+                              </MenuItem>
                             </RouterLink>
-                         
-                            <Modal open={editAssociado} onClose={EditClose} aria-labelledby="parent-modal-title" aria-describedby="parent-modal-description">
-                              <Box >
-                                <Card style={modalStyle}>
-                                  <AtuliazarAssociados associado={associado}></AtuliazarAssociados>
-                                </Card>
-                              </Box>
-                            </Modal>
 
 
                             <Modal open={getDelte} onClose={DeleteClose} aria-labelledby="parent-modal-title" aria-describedby="parent-modal-description">
@@ -378,7 +361,7 @@ export default function Clientes() {
                                     <Typography> Deseja Realmente excluir?  </Typography>
 
                                     <Box style={boxAlert}>
-                                      <Button  onClick={() => deleteAssociado(idAssociados)} color="inherit" size="small" >
+                                      <Button  onClick={() => deletecliente(idclientes)} color="inherit" size="small" >
                                         Excluir
                                       </Button> 
                                       

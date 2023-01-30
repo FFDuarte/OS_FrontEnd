@@ -13,10 +13,13 @@ import OrdemServico from './pages/tenant/ordemservico';
 
 
 import NewClient from './pages/tenant/clientes/newClient'
-import NewCar from './pages/tenant/carros/newCarros'
+import NewCarros from './pages/tenant/carros/newCarros'
 import NewPeca from './pages/tenant/pecas/newPecas'
 import NewOs from './pages/tenant/ordemservico/newOrdemServico'
 
+
+import EditCarros from './pages/tenant/carros/editCarros'
+import EditClient from './pages/tenant/clientes/editClientes'
 
 export const ProtectedRoute = ({ children }) => {
 
@@ -37,19 +40,23 @@ export  function RouteAutenticate() {
       element: <DashboardLayout />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-
-        { path: 'pecas', element: <Pecas /> },
-        { path: 'carros', element: <Carros /> },
-        { path: 'clientes', element: <Clientes /> },
-        { path: 'ordemservico', element: <OrdemServico /> },
-
-
-
         { path: 'profile', element: <Profile /> },
 
+        { path: 'clientes', element: <Clientes /> },
         { path: 'novocliente', element: <NewClient /> },
-        { path: 'novocarro', element: <NewCar /> },
+        { path: 'editcliente/:id', element: <EditClient /> },
+
+        { path: 'carros', element: <Carros /> },
+        { path: 'novocarro', element: <NewCarros /> },
+        { path: 'editcarro/:id',element: <EditCarros /> },
+
+        
+        { path: 'pecas', element: <Pecas /> },
         { path: 'novapeca', element: <NewPeca /> },
+
+
+        
+        { path: 'ordemservico', element: <OrdemServico /> },
         { path: 'novaos', element: <NewOs /> },
 
         { path: 'atualizarassociado/:id', element: <AtualizarAssociado /> },

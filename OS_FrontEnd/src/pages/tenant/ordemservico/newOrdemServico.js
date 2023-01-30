@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
@@ -30,8 +30,11 @@ import {  TextField, FormControl,
   Divider,
   ListItem,
   Paper,
-  ListItemText,} from '@mui/material';
+  ListItemText,
+  Autocomplete,
+  Chip,} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 // component
 import api from '../../../utils/api'
 // ----------------------------------------------------------------------
@@ -47,13 +50,45 @@ export default function NewOrdemServico() {
   const [valor_servico, setValorServico] = useState();
   const [descricao_servico, setDescricaoServico] = useState();
 
-  const tenantId = JSON.parse(getTenant_id())
+  const [clienteDados, setClienteDados] = useState();
+  const [veiculos, setVeiculos] = useState();
+  const [pecas, setPecas] = useState([]);
+
+  const [listCliente, setListCliente] = useState([]);
+  const [listVeiculos, setListVeiculos] = useState([]);
+  const [listPecas, setListPecas] = useState([]);
+console.log(listPecas)
+
+  const [inputCliente, setInputClienteValue] = useState('');
+  const [inputVeiculos, setInputVeiculosValue] = useState('');
+  const [inputPecas, setInputPecasValue] = useState('');
+
+
+  const tenant_id = JSON.parse(getTenant_id())
 
   var access_token = JSON.parse(getAcessToken())
 
 
+  const valHtml = pecas.map((option, index) => {
+    // This is to handle new options added by the user (allowed by freeSolo prop).
+    const label = option.nome|| option;
+    console.log(option)
+    return (
+      <Chip
+        key={label}
+        label={label}
+        deleteIcon={<RemoveCircleIcon />}
+        onDelete={() => {
+          setPecas(pecas.filter(entry => entry !== option));
+        }}
+      />
+    );
+  });
+
+
+
   async function formAssociados() {
-    await api.post(`/dashboard/${tenantId}/os/add`,{
+    await api.post(`/dashboard/${tenant_id}/os/add`,{
  
 
           cliente,
@@ -86,6 +121,44 @@ export default function NewOrdemServico() {
 
   }
  
+  useEffect(() => {
+    const GetCliente = async () => {
+      const data = await api.get(`dashboard/${tenant_id}/clientes`, {
+        headers: {
+          'Authorization': `Bearer ${access_token}`
+        }
+        })
+     
+        setListCliente(data.data.map(cliente => ({id: cliente.id ,label: cliente.nome})))
+    };
+
+    const GetVeiculo = async () => {
+      const data = await api.get(`dashboard/${tenant_id}/carros`, {
+        headers: {
+          'Authorization': `Bearer ${access_token}`
+        }
+        })
+     
+        setListVeiculos(data.data.map(veiculo => ({id: veiculo.id ,label: veiculo.placa})))
+    };
+
+    const GetPeca = async () => {
+      const data = await api.get(`dashboard/${tenant_id}/pecas`, {
+        headers: {
+          'Authorization': `Bearer ${access_token}`
+        }
+        })
+     
+        console.log(data.data)
+        setListPecas(data.data)
+    };
+    
+    GetCliente();
+    GetVeiculo();
+    GetPeca();
+  }, []);
+
+
   const particlesInit = async (main) => {
     console.log(main);
  
@@ -129,15 +202,21 @@ export default function NewOrdemServico() {
                         <Box sx={{p: 2}}>
                           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{p:1}}>
                                 
-                                <TextField
-                                  fullWidth
-                                  required
-                                  autoComplete="username"
-                                  type="text"
-                                  label="Selecionar CLiente"
-                                  onChange={e => setCarro(e.target.value)}
-                                  style={controlFormCep}
-                                />
+                          <Autocomplete
+                        value={clienteDados}
+                        onChange={(event, newValue) => {
+                          setClienteDados(newValue);
+                        }}
+                        inputValue={inputCliente}
+                        onInputChange={(event, newInputValue) => {
+                          setInputClienteValue(newInputValue);
+                        }}
+                        id="controllable-states-demo"
+                        options={listCliente}
+                        
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} />}
+                        />
                           </Stack>
                           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{p:1}}>
                                 <TextField
@@ -188,15 +267,22 @@ export default function NewOrdemServico() {
 
                        <Box sx={{p: 2}}>
                           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{p:1}}>
-                            <TextField
-                                  fullWidth
-                                  required
-                                  autoComplete="username"
-                                  type="text"
-                                  label="Selecionar Veiculo"
-                                  onChange={e => setCliente(e.target.value)}
-                                  style={controlFormCep}
-                                />
+                                  
+                          <Autocomplete
+                              value={veiculos}
+                              onChange={(event, newValue) => {
+                                setVeiculos(newValue);
+                              }}
+                              inputValue={inputVeiculos}
+                              onInputChange={(event, newInputValue) => {
+                                setInputVeiculosValue(newInputValue);
+                              }}
+                              id="controllable-states-demo"
+                              options={listVeiculos}
+                              
+                              sx={{ width: 300 }}
+                              renderInput={(params) => <TextField {...params} />}
+                              />
                           </Stack>
 
                           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{p:1}}>
@@ -245,130 +331,29 @@ export default function NewOrdemServico() {
                     </Stack>
 
                     <Card sx={{pt:1,pb:1}} >
+                    
                         <Typography sx={{p: 1}}> Peças</Typography>
-                        <Divider ></Divider>
-                          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{p:2}} >
-                                <TextField
-                                  fullWidth
-                                  required
-                                  autoComplete="username"
-                                  type="text"
-                                  label="Selecionar Peças"
-                                  onChange={e => setCliente(e.target.value)}
-                                  style={controlFormCep}
-                                />
-                          </Stack>
-                          <ListItem style={ListItemHeader}>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                          </ListItem> 
-                          <Paper style={paperGrid} >
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                            <ListItem  divider>
-                              <ListItem>
-                                <ListItemText primary="Nome" />
-                                <ListItemText primary="Marca" />    
-                                <ListItemText primary="Ano Fabricação" />   
-                                <ListItemText primary="Categoria" />          
-                                <ListItemText primary="Preço" />            
-                                <ListItemText style={itemText} primary="Admin" />       
-                              </ListItem> 
-                            </ListItem>
-                          </Paper>
-                          
+                        <Autocomplete
+                        multiple
+                        id="tags-standard"
+                        freeSolo
+                        filterSelectedOptions
+                        options={listPecas.map((pecas) => pecas.nome + pecas.id)}
+                        onChange={(e, newValue) => setPecas(newValue)}
+                        getOptionLabel={pecas => pecas.nome}
+                        renderTags={() => {}}
+                        value={pecas}
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            placeholder="Selecione as peças"
+                            margin="normal"
+                            fullWidth
+                          />
+                        )}
+                      />
+                      <Box className="selectedTags">{valHtml}</Box>
                     </Card>
 
 

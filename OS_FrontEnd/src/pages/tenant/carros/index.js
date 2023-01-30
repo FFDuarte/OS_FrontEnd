@@ -122,6 +122,8 @@ export default function Carros() {
         })
       
       setFetchedData(data.data);
+
+      
     };
     getData();
   }, []);
@@ -180,11 +182,12 @@ export default function Carros() {
 
   const [open, setOpen] = useState(false);
 
-  const [editAssociado, setEditAssociado] = useState(false);
+  const [editPecas, setEditAssociado] = useState(false);
 
   const [associado , setAssociado] = useState();
 
 
+  const [nomeCliente , setNomeCliente] = useState("");
 
 
 
@@ -254,30 +257,32 @@ export default function Carros() {
 
     
       if(id != null & id != '' ){
-        await api.post(`dashboard/${tenantId}/associados/deletar/${id}`,{
+        await api.delete(`dashboard/${tenantId}/carros/deletar/${id}`,{
         },{
           headers: {
             'Authorization': `Bearer ${access_token}`
           },
     
         } ).then((response) =>{
-    
+        
       })
-      window.location.reload();
+      
       }
     }
-    const particlesInit = async (main) => {
-
    
-      // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
-      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-      // starting from v2 you can add only the features you need reducing the bundle size
-      await loadFull(main);
-    };
+
+    function getClienteName (cliente) {
+        const clientename = JSON.parse(cliente)
+        console.log(cliente)
+
+        return clientename.label
+    }
+    
+
   
-    const particlesLoaded = (container) => {
-     
-    };
+
+    
+
   
 
   return (
@@ -318,9 +323,8 @@ export default function Carros() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id , nome ,telefone1,cnpf_cnpj,data_nascimento,email,rua,numero,
-                      pais,uf,cep } = row;
-                    const isItemSelected = selected.indexOf(nome) !== -1;
+                    const { id ,placa,ano,modelo,fabricante,cliente} = row;
+                    const isItemSelected = selected.indexOf(placa) !== -1;
 
                     return (  
                       <TableRow
@@ -333,11 +337,11 @@ export default function Carros() {
                      
                       >
                       
-                          <TableCell align="left">{nome}</TableCell>
-                          <TableCell align="left">{data_nascimento}</TableCell>
-                          <TableCell align="left">{cnpf_cnpj}</TableCell>
-                          <TableCell align="left">{telefone1}</TableCell>
-                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{placa}</TableCell>
+                          <TableCell align="left">{ano}</TableCell>
+                          <TableCell align="left">{modelo}</TableCell>
+                          <TableCell align="left">{fabricante}</TableCell>
+                          <TableCell align="left">{getClienteName(cliente)}</TableCell>
 
                           <TableCell align="left">
 
@@ -348,8 +352,8 @@ export default function Carros() {
                               <ListItemText primary="Deletar" primaryTypographyProps={{ variant: 'body2' }} />
                             </MenuItem>
                             
-                            <RouterLink   to={"/dashboard/atualizarassociado/" + id}>
-                            <MenuItem  to={"/dashboard/atualizarassociado" + id} sx={{ color: 'text.secondary' }}>
+                            <RouterLink   to={"/dashboard/editcarro/" + id}>
+                            <MenuItem  to={"/dashboard/editcarro" + id} sx={{ color: 'text.secondary' }}>
                               <ListItemIcon>
                                 <Iconify icon="eva:edit-fill" width={24} height={24} />
                               </ListItemIcon>
@@ -358,7 +362,7 @@ export default function Carros() {
 
                             </RouterLink>
                          
-                            <Modal open={editAssociado} onClose={EditClose} aria-labelledby="parent-modal-title" aria-describedby="parent-modal-description">
+                            <Modal open={editPecas} onClose={EditClose} aria-labelledby="parent-modal-title" aria-describedby="parent-modal-description">
                               <Box >
                                 <Card style={modalStyle}>
                                   <AtuliazarAssociados associado={associado}></AtuliazarAssociados>
